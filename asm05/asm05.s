@@ -5,11 +5,10 @@ section .bss
 
 section .text
 _start:
-	mov rdi, [rsp]
-	cmp rdi, 2
-	jne error
+
 	mov rsi, [rsp+16]
 	mov rdx, buffer
+	xor rcx, rcx
 	jmp loop
 
 	loop:
@@ -19,13 +18,14 @@ _start:
 	mov byte [rdx], al
 	inc rsi
 	inc rdx
+	inc rcx
 	jmp loop
 
 	end:
 	mov rax, 1
 	mov rdi, 1
 	mov rsi, buffer
-	mov rdx, 256
+	mov rdx, rcx
 	syscall
 
 	mov rax, 60
