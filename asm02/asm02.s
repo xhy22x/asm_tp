@@ -15,10 +15,11 @@ _start:
 	syscall
 
 	cmp byte [buffer], 0x34
-	jne fin
+	jne error
 	cmp byte [buffer+1], 0x32
-	je egal
-	jmp fin
+	jne error
+	cmp byte [buffer+2], 0x0A
+	jne error
 
 	egal:
 	mov rax, 1
@@ -31,7 +32,7 @@ _start:
 	xor edi, edi
 	syscall
 
-	fin:
+	error:
 	mov rax, 60
 	mov edi, 1
 	syscall
