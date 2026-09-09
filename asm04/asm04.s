@@ -12,6 +12,10 @@ _start:
 	mov rdx, 256
 	syscall
 
+	cmp byte [rsi], 0x2D
+	jne loop
+	inc rsi
+
 	loop:
 	cmp byte [rsi], 0x0A
 	je end

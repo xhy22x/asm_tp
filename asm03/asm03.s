@@ -8,13 +8,15 @@ _start:
 	
 	mov rdi, [rsp]
 	cmp rdi, 2
-	jne fin
+	jne error
 
 	mov rsi, [rsp+16]
 	cmp byte [rsi], 0x34
-	jne fin
+	jne error
 	cmp byte [rsi+1], 0x32
-	jne fin
+	jne error
+	cmp byte [rsi+2], 0
+	jne error
 
 	mov rax, 1
 	mov rdi, 1
@@ -26,7 +28,7 @@ _start:
 	xor edi, edi
 	syscall
 
-	fin:
+	error:
 	mov rax, 60
 	mov edi, 1
 	syscall
