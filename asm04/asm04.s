@@ -15,6 +15,8 @@ _start:
 	loop:
 	cmp byte [rsi], 0x0A
 	je end
+	cmp byte [rsi], 0x30
+	jl error
 	cmp byte [rsi], 0x39
 	jg error
 	inc rsi
