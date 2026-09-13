@@ -5,6 +5,9 @@ section .bss
 
 section .text
 _start:
+	mov rax, [rsp]
+	cmp rax, 2
+	jl error
 
 	mov rsi, [rsp+16]
 	mov rdx, buffer
