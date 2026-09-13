@@ -25,6 +25,7 @@ _start:
 	lea rdi, [buffer+255]
 	mov byte [rdi], 10
 	call convert_display
+	mov rsi, rdi
 	jmp end
 
 	convert_digit:
@@ -57,7 +58,6 @@ _start:
 	end:
 	mov rax, 1
 	mov rdi, 1
-	mov rsi, buffer
 	mov rdx, 256
 	syscall
 
