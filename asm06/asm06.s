@@ -12,20 +12,49 @@ _start:
 
 	mov rsi, [rsp+16]
 	xor rcx, rcx
-	call convert_digit
+	call conv
 	mov rbx, rcx
 
 	mov rsi, [rsp+24]
 	xor rcx, rcx
-	call convert_digit
+	call conv
 	add rbx, rcx
 
-	mov rax, rbx
-	mov rcx, 10
-	mov rdi, buffer
 	xor r8, r8
+	mov rdi, buffer
+	mov rcx, 10
+
+	test rbx, rbx
+	js number_negative
+	jmp number_positive
+
+	conv:
+	cmp byte [rsi], '-'
+	je negative
+	call convert_digit
+	ret
+
+	negative:
+	inc rsi
+	call convert_digit
+	neg rcx
+	ret
+
+	number_positive:
+	mov rax, rbx
 	call convert_display
 	mov rcx, reverse
+	call reverse_buffer
+	jmp end
+
+	number_negative:
+	neg rbx
+	mov rax, rbx
+	call convert_display
+	mov rcx, reverse
+	mov byte [rcx], '-'
+	inc rcx
+	inc r8
 	call reverse_buffer
 	jmp end
 
