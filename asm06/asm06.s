@@ -2,6 +2,7 @@ global _start
 
 section .bss
 	buffer resb 256
+	reverse resb 256
 
 section .text
 _start:
@@ -22,15 +23,16 @@ _start:
 	mov rax, rbx
 	mov rcx, 10
 
-	lea rdi, [buffer+255]
-	mov byte [rdi], 10
+	mov rdi, buffer
 	call convert_display
-	mov rsi, rdi
+	mov rcx, reverse
+	call reverse_buffer
+	mov byte [rcx+1], 10
 	jmp end
 
 	convert_digit:
 	cmp byte [rsi], 0
-	je convert_end
+	je call_end
 	cmp byte [rsi], 0x30
 	jb error
 	cmp byte [rsi], 0x39
@@ -47,17 +49,27 @@ _start:
 	xor rdx, rdx
 	div rcx
 	add dl, '0'
-	dec rdi
 	mov byte [rdi], dl
+	inc rdi
 	test rax, rax
 	jnz convert_display
 
-	convert_end:
+	call_end:
 	ret
+
+	reverse_buffer:
+	dec rdi
+	cmp byte [rdi], 0
+	je call_end
+	mov al, byte [rdi]
+	mov byte [rcx], al
+	inc rcx
+	jmp reverse_buffer
 
 	end:
 	mov rax, 1
 	mov rdi, 1
+	mov rsi, reverse
 	mov rdx, 256
 	syscall
 
