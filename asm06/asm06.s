@@ -27,7 +27,7 @@ _start:
 	call convert_display
 	mov rcx, reverse
 	call reverse_buffer
-	mov byte [rcx+1], 10
+	mov byte [rcx], 10
 	jmp end
 
 	convert_digit:
