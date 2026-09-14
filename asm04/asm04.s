@@ -12,9 +12,20 @@ _start:
 	mov rdx, 256
 	syscall
 
+	call ignore
+
 	cmp byte [rsi], 0x2D
 	jne loop
 	inc rsi
+	jmp loop
+
+	ignore:
+	cmp byte [rsi], 0x20
+	jne call_end
+	inc rsi
+
+	call_end:
+	ret
 
 	loop:
 	cmp byte [rsi], 0x0A
