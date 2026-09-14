@@ -28,7 +28,13 @@ _start:
 	js number_negative
 	jmp number_positive
 
+	ignore:
+	cmp byte [rsi], 0x20
+	jne call_end
+	inc rsi
+
 	conv:
+	call ignore
 	cmp byte [rsi], '-'
 	je negative
 	call convert_digit
