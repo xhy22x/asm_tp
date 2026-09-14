@@ -27,7 +27,6 @@ _start:
 	call convert_display
 	mov rcx, reverse
 	call reverse_buffer
-	mov byte [rcx], 10
 	jmp end
 
 	convert_digit:
@@ -59,20 +58,19 @@ _start:
 	ret
 
 	reverse_buffer:
-	test r8, r8
-	jz call_end
 	dec rdi
+	cmp byte [rdi], 0
+	je call_end
 	mov al, byte [rdi]
 	mov byte [rcx], al
 	inc rcx
-	dec r8
 	jmp reverse_buffer
 
 	end:
 	mov rax, 1
 	mov rdi, 1
 	mov rsi, reverse
-	mov rdx, 100
+	mov rdx, r8
 	syscall
 
 	mov rax, 60
