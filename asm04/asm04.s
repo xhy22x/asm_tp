@@ -14,6 +14,9 @@ _start:
 
 	call ignore
 
+	cmp byte [rsi], 0x0A
+	je error
+
 	cmp byte [rsi], 0x2D
 	jne loop
 	inc rsi
@@ -23,6 +26,7 @@ _start:
 	cmp byte [rsi], 0x20
 	jne call_end
 	inc rsi
+	jmp ignore
 
 	call_end:
 	ret
