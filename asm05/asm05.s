@@ -25,6 +25,9 @@ _start:
 	jmp loop
 
 	end:
+	mov byte [rdx], 0x0A
+	inc rcx
+
 	mov rax, 1
 	mov rdi, 1
 	mov rsi, buffer
