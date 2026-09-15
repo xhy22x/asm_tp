@@ -19,6 +19,7 @@ _start:
 	xor rcx, rcx
 	call conv
 	add rbx, rcx
+	jo error
 
 	xor r8, r8
 	mov rdi, buffer
@@ -75,7 +76,9 @@ _start:
 	movzx rax, byte [rsi]
 	sub rax, '0'
 	imul rcx, rcx, 10
+	jo error
 	add rcx, rax
+	jo error
 	inc rsi
 	jmp convert_digit
 
@@ -102,6 +105,9 @@ _start:
 	jmp reverse_buffer
 
 	end:
+	mov byte [rcx], 0x0A
+	inc r8
+
 	mov rax, 1
 	mov rdi, 1
 	mov rsi, reverse
