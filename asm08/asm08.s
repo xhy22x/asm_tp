@@ -51,6 +51,8 @@ _start:
 	ret
 
 	if_negative:
+	cmp r9, 1
+	jne call_end
 	mov rcx, output
 	mov byte [rcx], 0x30
 	inc rcx
