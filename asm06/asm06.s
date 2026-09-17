@@ -8,7 +8,7 @@ section .text
 _start:
 	mov rax, [rsp]
 	cmp rax, 3
-	jne error
+	jne error_arg
 
 	mov rsi, [rsp+16]
 	xor rcx, rcx
@@ -33,6 +33,7 @@ _start:
 	cmp byte [rsi], 0x20
 	jne call_end
 	inc rsi
+	jmp ignore
 
 	conv:
 	call ignore
@@ -121,4 +122,9 @@ _start:
 	error:
 	mov rax, 60
 	mov rdi, 1
+	syscall
+
+	error_arg:
+	mov rax, 60
+	mov rdi, 2
 	syscall
