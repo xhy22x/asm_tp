@@ -1,7 +1,6 @@
 global _start
 
 section .bss
-	input resb 256
 	reverse resb 256
 	output resb 256
 
@@ -9,15 +8,19 @@ section .text
 _start:
 	mov rax, [rsp]
 	cmp rax, 2
-	jne error
+	jne error_arg
 
 	mov rsi, [rsp+16]
 	call ignore
 	cmp byte [rsi], 0
-	je error
+	je error_arg
+
+	xor r9, r9
+	call check_negative
 
 	xor rdi, rdi
 	call convert_digit
+	call if_negative
 
 	xor r8, r8
 	xor rcx, rcx
@@ -29,7 +32,7 @@ _start:
 	call convert_reverse
 	mov rcx, output
 	call reverse_buffer
-	jmp end
+	jmp success
 
 	ignore:
 	cmp byte [rsi], 0x20
@@ -39,6 +42,20 @@ _start:
 
 	call_end:
 	ret
+
+	check_negative:
+	cmp byte [rsi], '-'
+	jne call_end
+	mov r9, 1
+	inc rsi
+	ret
+
+	if_negative:
+	mov rcx, output
+	mov byte [rcx], 0x30
+	inc rcx
+	inc r8
+	jmp success
 
 	convert_digit:
 	cmp byte [rsi], 0
@@ -85,7 +102,7 @@ _start:
 	inc rcx
 	jmp reverse_buffer
 
-	end:
+	success:
 	mov byte [rcx], 0x0A
 	inc r8
 
@@ -102,4 +119,9 @@ _start:
 	error:
 	mov rax, 60
 	mov rdi, 1
+	syscall
+
+	error_arg:
+	mov rax, 60
+	mov rdi, 2
 	syscall
