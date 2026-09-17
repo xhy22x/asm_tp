@@ -59,7 +59,7 @@ _start:
 	div rcx
 
 	test rdx, rdx
-	je error
+	je not_prime
 
 	inc r8
 	jmp if_prime
@@ -69,8 +69,13 @@ _start:
 	mov rdi, 0
 	syscall
 
-	error:
+	not_prime:
 	mov rax, 60
 	mov rdi, 1
+	syscall
+
+	error:
+	mov rax, 60
+	mov rdi, 2
 	syscall
 
