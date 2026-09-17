@@ -15,9 +15,20 @@ _start:
 
 	cmp byte [rsi], 0x0A
 	je error
+
+	xor r9, r9
+	cmp byte [rsi], '-'
+	je negative
+	jmp conv
+
+	negative:
+	mov r9, 1
+	inc rsi
+	jmp conv
+
+	conv:
 	xor rdi, rdi
 	call convert_digit
-
 	cmp rdi, 2
 	jl error
 	mov r8, 2
@@ -50,6 +61,8 @@ _start:
 	ret
 
 	if_prime:
+	cmp r9, 1
+	je not_prime
 	cmp r8, rdi
 	je prime
 
