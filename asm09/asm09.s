@@ -7,13 +7,13 @@ section .bss
 section .text
 _start:
 	xor r8, r8
-	mov rsi, [rsp+16]
+	xor r9, r9
 	mov rax, [rsp]
 	cmp rax, 2
 	je case_1
 	cmp rax, 3
 	je case_2
-	jmp error
+	jmp error_arg
 
 	ignore:
 	cmp byte [rsi], 0x20
@@ -29,21 +29,42 @@ _start:
 	je call_end
 	jmp error
 
+	check_negative:
+	cmp byte [rsi], '-'
+	jne call_end
+	inc rsi
+	mov r9, 1
+	ret
+
+	if_negative:
+	cmp r9, 1
+	jne call_end
+	mov byte [rcx], '-'
+	inc rcx
+	inc r8
+	ret
+
 	call_end:
 	ret
 
 	case_1:
+	mov rsi, [rsp+16]
 	call ignore
+	cmp byte [rsi], 0
+	je error
+	call check_negative
 	call convert_digit
 	mov rax, rdi
 	mov rcx, 16
 	mov rdi, reverse
 	call convert_hex
 	mov rcx, output
+	call if_negative
 	call reverse_buffer
 	jmp end
 
 	case_2:
+	mov rsi, [rsp+16]
 	call ignore
 	call check_binary_arg
 	mov rsi, [rsp+24]
@@ -93,11 +114,11 @@ _start:
 
 	check_binary_arg:
 	cmp byte [rsi], '-'
-	jne error
+	jne error_arg
 	cmp byte [rsi+1], 'b'
-	jne error
+	jne error_arg
 	cmp byte [rsi+2], 0
-	jne error
+	jne error_arg
 	ret
 
 	convert_binary:
@@ -137,4 +158,9 @@ _start:
 	error:
 	mov rax, 60
 	mov rdi, 1
+	syscall
+
+	error_arg:
+	mov rax, 60
+	mov rdi, 2
 	syscall
