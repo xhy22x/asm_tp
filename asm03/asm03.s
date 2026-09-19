@@ -5,10 +5,10 @@ section .data
 
 section .text
 _start:
-	
+
 	mov rdi, [rsp]
 	cmp rdi, 2
-	jne error
+	jne error_arg
 
 	mov rsi, [rsp+16]
 	cmp byte [rsi], 0x34
@@ -31,4 +31,9 @@ _start:
 	error:
 	mov rax, 60
 	mov edi, 1
+	syscall
+
+	error_arg:
+	mov rax, 60
+	mov edi, 2
 	syscall
