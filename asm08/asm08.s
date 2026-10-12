@@ -13,7 +13,7 @@ _start:
 	mov rsi, [rsp+16]
 	call ignore
 	cmp byte [rsi], 0
-	je error_arg
+	je error
 
 	xor r9, r9
 	call check_negative
