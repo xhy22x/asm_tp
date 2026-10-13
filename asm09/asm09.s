@@ -49,6 +49,7 @@ _start:
 
 	case_1:
 	mov rsi, [rsp+16]
+	call wrong_usage_binary_arg
 	call ignore
 	cmp byte [rsi], 0
 	je error
@@ -65,16 +66,19 @@ _start:
 
 	case_2:
 	mov rsi, [rsp+16]
-	call ignore
 	call check_binary_arg
 	mov rsi, [rsp+24]
 	call ignore
+	cmp byte [rsi], 0
+	je error
+	call check_negative
 	call convert_digit
 	mov rax, rdi
 	mov rcx, 2
 	mov rdi, reverse
 	call convert_binary
 	mov rcx, output
+	call if_negative
 	call reverse_buffer
 	jmp end
 
@@ -91,9 +95,9 @@ _start:
 	movzx rax, byte [rsi]
 	sub rax, '0'
 	imul rdi, rdi, 10
-	jo error
+	jc error
 	add rdi, rax
-	jo error
+	jc error
 	inc rsi
 	jmp convert_digit
 
@@ -119,6 +123,13 @@ _start:
 	jne error_arg
 	cmp byte [rsi+2], 0
 	jne error_arg
+	ret
+
+	wrong_usage_binary_arg:
+	cmp byte [rsi+1], 'b'
+	je error_arg
+	cmp byte [rsi+2], 0
+	je error_arg
 	ret
 
 	convert_binary:
