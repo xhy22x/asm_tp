@@ -1,6 +1,7 @@
 global _start
 
 section .bss
+	input resb 256
 	number resb 256
 
 section .text
@@ -8,7 +9,7 @@ _start:
 
 	mov rax, 0
 	mov rdi, 0
-	mov rsi, number
+	mov rsi, input
 	mov rdx, 256
 	syscall
 
@@ -17,8 +18,10 @@ _start:
 	cmp byte [rsi], 0x0A
 	je error
 
+	xor r8, r8
 	cmp byte [rsi], 0x2D
 	jne loop
+	mov r8, 1
 	inc rsi
 	jmp loop
 
@@ -38,7 +41,23 @@ _start:
 	jl error
 	cmp byte [rsi], 0x39
 	jg error
+
+	movzx rax, byte [rsi]
+	sub rax, '0'
+	imul rdi, rdi, 10
+	jo error
+
 	inc rsi
+
+	test r8, r8
+	jnz negative
+	positive:
+	add rdi, rax
+	jo error
+	jmp loop
+	negative:
+	sub rdi, rax
+	jo error
 	jmp loop
 
 	end:
@@ -48,6 +67,7 @@ _start:
 	xor ah, ah
 	mov bl, 2
 	div bl
+
 
 	movzx edi, ah
 	mov eax, 60
