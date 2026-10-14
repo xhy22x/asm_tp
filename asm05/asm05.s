@@ -7,7 +7,7 @@ section .text
 _start:
 	mov rax, [rsp]
 	cmp rax, 2
-	jl error
+	jne error
 
 	mov rsi, [rsp+16]
 	mov rdx, buffer
@@ -40,5 +40,5 @@ _start:
 
 	error:
 	mov rax, 60
-	mov edi, 1
+	mov edi, 2
 	syscall
