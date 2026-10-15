@@ -18,10 +18,10 @@ _start:
 
 	xor r9, r9
 	cmp byte [rsi], '-'
-	je negative
+	je minus_sign
 	jmp conv
 
-	negative:
+	minus_sign:
 	mov r9, 1
 	inc rsi
 	jmp conv
@@ -30,7 +30,7 @@ _start:
 	xor rdi, rdi
 	call convert_digit
 	cmp rdi, 2
-	jl error
+	jl not_prime
 	mov r8, 2
 	call if_prime
 
@@ -52,9 +52,18 @@ _start:
 	sub rax, '0'
 	imul rdi, rdi, 10
 	jo error
+
+	inc rsi
+
+	test r9, r9
+	jnz negative
+	positive:
 	add rdi, rax
 	jo error
-	inc rsi
+	jmp convert_digit
+	negative:
+	sub rdi, rax
+	jo error
 	jmp convert_digit
 
 	call_end:
@@ -91,4 +100,5 @@ _start:
 	mov rax, 60
 	mov rdi, 2
 	syscall
+
 
