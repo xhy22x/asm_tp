@@ -95,10 +95,19 @@ _start:
 	movzx rax, byte [rsi]
 	sub rax, '0'
 	imul rdi, rdi, 10
-	jc error
-	add rdi, rax
-	jc error
+	jo error
+
 	inc rsi
+
+	test r9, r9
+	jnz negative
+	positive:
+	add rdi, rax
+	jo error
+	jmp convert_digit
+	negative:
+	sub rdi, rax
+	jo error
 	jmp convert_digit
 
 	convert_hex:
@@ -126,11 +135,13 @@ _start:
 	ret
 
 	wrong_usage_binary_arg:
+	cmp byte [rsi], '-'
+	jne call_end
 	cmp byte [rsi+1], 'b'
-	je error_arg
+	jne call_end
 	cmp byte [rsi+2], 0
-	je error_arg
-	ret
+	jne call_end
+	jmp error_arg
 
 	convert_binary:
 	xor rdx, rdx
