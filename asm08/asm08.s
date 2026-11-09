@@ -11,7 +11,6 @@ _start:
 	jne error_arg
 
 	mov rsi, [rsp+16]
-	call ignore
 	cmp byte [rsi], 0
 	je error
 
@@ -33,12 +32,6 @@ _start:
 	mov rcx, output
 	call reverse_buffer
 	jmp success
-
-	ignore:
-	cmp byte [rsi], 0x20
-	jne call_end
-	inc rsi
-	jmp ignore
 
 	call_end:
 	ret
