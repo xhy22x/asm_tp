@@ -2,7 +2,6 @@ global _start
 
 section .bss
 	input resb 256
-	number resb 256
 
 section .text
 _start:
@@ -13,29 +12,31 @@ _start:
 	mov rdx, 256
 	syscall
 
-	call ignore
-
-	cmp byte [rsi], 0x0A
-	je error
+	call check
 
 	xor r8, r8
+	mov r8, 1
+
 	cmp byte [rsi], 0x2D
 	jne loop
-	mov r8, 1
 	inc rsi
+	call check
 	jmp loop
 
-	ignore:
-	cmp byte [rsi], 0x20
-	jne call_end
-	inc rsi
-	jmp ignore
+	check:
+	cmp byte [rsi], 0x00
+	je error
+	cmp byte [rsi], 0x0A
+	je error
+	jmp call_end
 
 	call_end:
 	ret
 
 	loop:
 	cmp byte [rsi], 0x0A
+	je end
+	cmp byte [rsi], 0x00
 	je end
 	cmp byte [rsi], 0x30
 	jl error
