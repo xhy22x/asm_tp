@@ -37,10 +37,16 @@ _start:
 	ret
 
 	if_negative:
-	cmp r9, 1
-	jne call_end
-	mov byte [rcx], '-'
-	inc rcx
+	test rax, rax
+	jns call_end
+	neg rax
+	ret
+
+	add_neg_sign:
+	test r9, r9
+	jz call_end
+	mov byte [rdi], 0x2D
+	inc rdi
 	inc r8
 	ret
 
@@ -58,9 +64,10 @@ _start:
 	mov rax, rdi
 	mov rcx, 16
 	mov rdi, reverse
+	call if_negative
 	call convert_hex
 	mov rcx, output
-	call if_negative
+	call add_neg_sign
 	call reverse_buffer
 	jmp end
 
@@ -76,9 +83,10 @@ _start:
 	mov rax, rdi
 	mov rcx, 2
 	mov rdi, reverse
+	call if_negative
 	call convert_binary
 	mov rcx, output
-	call if_negative
+	call add_neg_sign
 	call reverse_buffer
 	jmp end
 
