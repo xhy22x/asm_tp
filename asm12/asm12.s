@@ -12,11 +12,11 @@ _start:
 	mov rdx, 4096
 	syscall
 
+	cmp rax, 0
+	je end
+
 	xor r8, r8
 	jmp loop
-
-	call_end:
-	ret
 
 	loop:
 	cmp byte [rsi], 0
