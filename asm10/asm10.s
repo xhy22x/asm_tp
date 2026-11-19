@@ -116,6 +116,7 @@ _start:
 	mov rcx, 10
 	mov rdi, buffer
 
+	xor r8, r8
 	xor r10, r10
 	test rax, rax
 	jns positive
