@@ -15,10 +15,10 @@ _start:
 	call check
 
 	xor r8, r8
-	mov r8, 1
 
 	cmp byte [rsi], 0x2D
 	jne loop
+	mov r8, 1
 	inc rsi
 	call check
 	jmp loop
