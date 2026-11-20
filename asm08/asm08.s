@@ -41,6 +41,8 @@ _start:
 	jne call_end
 	mov r9, 1
 	inc rsi
+	cmp byte [rsi], 0
+	je error
 	ret
 
 	if_negative:
